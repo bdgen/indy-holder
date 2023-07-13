@@ -41,10 +41,6 @@ dependencies {
     //libjnidispatch.so 내 jna version = 4.5.1 이므로 Major version은 동일하되 minor version 5 이상인 library 이어야 함
     implementation 'net.java.dev.jna:jna:4.5.2'
     implementation 'org.hyperledger:indy:1.16.0'                        //indy wrapper library
-    implementation 'com.google.code.gson:gson:2.9.0'                    //JSON parser
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'              //HTTP network library
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
     implementation 'commons-io:commons-io:2.13.0'
 
     implementation 'androidx.core:core-ktx:1.10.1'

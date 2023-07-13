@@ -14,7 +14,7 @@ hyperledger 기반의 SSI(Self-Sovereign-Identity) holder 만들기 실습
     ex) MS-office, Google Docs, [PlantUML](https://plantuml.com/ko/) 등
 
 ### repository 생성
-초기 repository인 [indy-holder](https://github.com/bdgen/indy-holder)를 [fork](https://docs.github.com/ko/get-started/quickstart/fork-a-repo#forking-a-repository)하여 팀 별 신규 repository를 생성한 후 작업합니다.
+초기 repository인 [indy-holder](https://github.com/bdgen/indy-holder) 중 practice branch를 check-out 한 후 해당 브랜치의 소스를 받아 새 repository에 import합니다.
 
 ### 학습 목표
 - DID 개념을 이해하고 DID를 이용한 holder 앱을 설계, 구현할 수 있다.
@@ -44,7 +44,7 @@ clone한 repository에 아래 세팅이 되어 있는지 확인합니다.
 - /app/src/main/res: UI 구성을 위한 각종 정적 resource 파일 directory
 
 ### indy client directory structure
-![indy client dir](app/etc/indy_client_dir_structure.png)
+![indy client dir](etc/indy-holder-created-wallet-example 2023-07-14 오전 1.07.59.png)
 
 ### 
 sdk API

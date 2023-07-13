@@ -19,9 +19,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        //TODO
-        // 1. type = null 인데, 이 부분 확인
-        // 2. manifest 등에서 설정할 수 있는지 여부 확인
         //지갑 설정 과정
         //1. load indy library
         //dataDir.absolutePath = /data/user/0/lec.baekseokuniv.ssiholder
@@ -52,7 +49,7 @@ class App : Application() {
                     return@exceptionally null
                 }
         }
-        //create secret when issuing
+        //5. create secret
         if (!getMasterSecret().isNullOrEmpty())
             return
         WalletConfig.createMasterSecret(wallet, getMasterSecret())
