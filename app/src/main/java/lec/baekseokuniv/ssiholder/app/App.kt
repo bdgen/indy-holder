@@ -3,6 +3,8 @@ package lec.baekseokuniv.ssiholder.app
 import android.app.Application
 import android.content.Context
 import android.system.Os
+import android.util.Log
+import android.widget.Toast
 import lec.baekseokuniv.ssiholder.config.PoolConfig
 import lec.baekseokuniv.ssiholder.config.WalletConfig
 import org.hyperledger.indy.sdk.pool.Pool
@@ -27,10 +29,12 @@ class App : Application() {
 
         //2. create and then open pool
         Pool.openPoolLedger(PoolConfig.getPoole(this), "{}").get()
+        Log.d(App::class.simpleName, "success open pool ledger")
 
         //3. create and then open wallet
         WalletConfig.createWallet(this).get()
         wallet = WalletConfig.openWallet().get()
+        Log.d(App::class.simpleName, "success open wallet")
 
         //4. create DID
         if (getDid().isNullOrEmpty() || getVerKey().isNullOrEmpty()) {
@@ -42,6 +46,7 @@ class App : Application() {
                                 putString(PREF_KEY_DID, didAndVerKey.first)
                                 putString(PREF_KEY_VERKEY, didAndVerKey.second)
                                 apply()
+                                Log.d(App::class.simpleName, "success create did")
                             }
                         }
                 }.exceptionally {
@@ -59,6 +64,7 @@ class App : Application() {
                         with(it.edit()) {
                             putString(PREF_MASTER_SECRET, this@apply)
                             apply()
+                            Log.d(App::class.simpleName, "success create master secret")
                         }
                     }
             }
