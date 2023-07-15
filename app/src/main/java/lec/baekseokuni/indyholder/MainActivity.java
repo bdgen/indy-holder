@@ -15,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import kr.co.bdgen.indywrapper.data.payload.OfferPayload;
+import kr.co.bdgen.indywrapper.repository.CredentialRepository;
 import kr.co.bdgen.indywrapper.repository.IssuingRepository;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,6 +44,47 @@ public class MainActivity extends AppCompatActivity {
                 offerPayload -> {
                     Log.d("[SUCCESS]", offerPayload.getCredDefJson() + "\n" + offerPayload.getCredOfferJson());
                     offer = offerPayload;
+
+                    //2. request and issue credential
+                    repository.requestCredential(
+                            MyApplication.getWallet(),
+                            MyApplication.getDid(this),
+                            MyApplication.getMasterSecret(this),
+                            secret,
+                            offer,
+                            (credentialInfo, issuePayload) -> {
+                                Log.d(
+                                        "[SUCCESS]",
+                                        credentialInfo.getCredReqMetadataJson() +
+                                                "\n" +
+                                                credentialInfo.getCredReqJson() +
+                                                "\n" +
+                                                credentialInfo.getCredDefJson() +
+                                                "\n" +
+                                                issuePayload.getCredentialJson()
+                                );
+
+                                //3. store credential
+                                repository.storeCredential(
+                                        MyApplication.getWallet(),
+                                        credentialInfo,
+                                        issuePayload,
+                                        cred -> {
+                                            Log.i("[SUCCESS]", "credential = " + cred);
+                                            return null;
+                                        },
+                                        error -> {
+                                            Log.e("[ERROR!]", error.getMessage(), error);
+                                            return null;
+                                        }
+                                );
+                                return null;
+                            },
+                            error -> {
+                                Log.e("[ERROR!]", error.getMessage(), error);
+                                return null;
+                            }
+                    );
                     return null;
                 },
                 error -> {
@@ -53,13 +95,27 @@ public class MainActivity extends AppCompatActivity {
 
         /*
         terminal emulator 실행 code
-        $
+
         $ cd $ADB_HOME
         $ adb shell am start
             -W -a android.intent.action.VIEW
             -d "indy://holder?secret=test1"
          */
 
-        //2. request and issue credential
+
+    }
+
+    /**
+     * 저장한 credential 정보를 받아오기 위한 함수
+     * @return credential json array를 담은 raw data
+     */
+    private String getCredential() {
+        String credential;
+        CredentialRepository credentialRepository = new CredentialRepository();
+        credential = credentialRepository.getRawCredentials(
+                MyApplication.getWallet(),
+                "{}"
+        );
+        return credential;
     }
 }
