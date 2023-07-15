@@ -1,6 +1,7 @@
 package lec.baekseokuni.indyholder;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,6 +20,25 @@ public class MyApplication extends Application {
     public static final String PREF_KEY_VER_KEY = "PREF_KEY_VER_KEY";
     public static final String PREF_KEY_MASTER_SECRET = "PREF_KEY_MASTER_SECRET";
 
+    private static Wallet wallet;
+
+    public static Wallet getWallet() {
+        return wallet;
+    }
+
+    public static String getDid(Context context) {
+        String did = null;
+        SharedPreferences pref = context.getSharedPreferences(WALLET_PREFERENCES, MODE_PRIVATE);
+        did = pref.getString(PREF_KEY_DID, "");
+        return did;
+    }
+
+    public static String getMasterSecret(Context context) {
+        String masterSecret = null;
+        SharedPreferences pref = context.getSharedPreferences(WALLET_PREFERENCES, MODE_PRIVATE);
+        masterSecret = pref.getString(PREF_KEY_MASTER_SECRET, "");
+        return masterSecret;
+    }
 
     @Override
     public void onCreate() {
@@ -32,19 +52,14 @@ public class MyApplication extends Application {
         try {
             //3. ledger 환경 사용을 위해 pool ledger 열기
             Pool.openPoolLedger(poolName, "{}").get();
-
             //4. wallet 생성
             WalletConfig.createWallet(this).get();
-
             //5. wallet 열기
-            Wallet wallet = WalletConfig.openWallet().get();
-
+            wallet = WalletConfig.openWallet().get();
             //6. did, verKey 생성
             Pair<String, String> didAndVerKey = WalletConfig.createDid(wallet).get();
-
             //7. master secret 생성
             String masterSecret = WalletConfig.createMasterSecret(wallet, null);
-
             //8. 생성한 did, verKey, masterSecretId 저장
             SharedPreferences prefs = getSharedPreferences(WALLET_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
