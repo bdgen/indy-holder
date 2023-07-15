@@ -99,6 +99,10 @@ class IssuingRepository() {
                 }
                 onFail(Exception("fail"))
             }
+            .exceptionally {
+                onFail(Exception(it))
+                return@exceptionally null
+            }
     }
 
     /**
