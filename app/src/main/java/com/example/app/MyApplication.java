@@ -1,6 +1,7 @@
 package com.example.app;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,6 +19,20 @@ public class MyApplication extends Application {
     public static final String PREF_KEY_DID = "PREF_KEY_DID";
     public static final String PREF_KEY_VER_KEY = "PREF_KEY_VER_KEY";
     public static final String PREF_KEY_MASTER_SECRET = "PREF_KEY_MASTER_SECRET";
+    private static Wallet wallet;
+    public static Wallet getWallet() { return wallet; }
+    public static String getDid(Context context) {
+        String did = null;
+        SharedPreferences pref = context.getSharedPreferences(WALLET_PREFERENCE, MODE_PRIVATE);
+        did = pref.getString(PREF_KEY_DID, "");
+        return did;
+    }
+    public static String getMasterSecret(Context context) {
+        String masterSecret = null;
+        SharedPreferences pref = context.getSharedPreferences(WALLET_PREFERENCE, MODE_PRIVATE);
+        masterSecret = pref.getString(PREF_KEY_MASTER_SECRET, "");
+        return masterSecret;
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -27,7 +42,7 @@ public class MyApplication extends Application {
             Pool.openPoolLedger(poolName, "{}").get();
 
             WalletConfig.createWallet(this).get();
-            Wallet wallet = WalletConfig.openWallet().get();
+            wallet = WalletConfig.openWallet().get();
 
             Pair<String, String> didAndVerKey = WalletConfig.createDid(wallet).get();
             String masterSecret = WalletConfig.createMasterSecret(wallet, null);

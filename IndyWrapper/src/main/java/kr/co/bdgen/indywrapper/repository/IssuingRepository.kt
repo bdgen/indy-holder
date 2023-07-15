@@ -24,7 +24,7 @@ class IssuingRepository() {
     /**
      * 1. Credential을 생성하기 위해 issuer에 offer
      */
-    fun reuqestOffer(
+    fun requestOffer(
         secret: String,
         onSuccess: (OfferPayload) -> Void,
         onFail: (Throwable) -> Void,
@@ -127,4 +127,5 @@ class IssuingRepository() {
                 onFail(it)
             }
     }
+
 }
