@@ -12,6 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SSIHolder"
         android:usesCleartextTraffic="true">
+        android:theme="@style/Theme.SSIHolder">
+        <activity
+            android:name=".credential.CredentialActivity"
+            android:exported="false" />
+        <activity
+            android:name=".verification.VerificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".issue.IssueActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

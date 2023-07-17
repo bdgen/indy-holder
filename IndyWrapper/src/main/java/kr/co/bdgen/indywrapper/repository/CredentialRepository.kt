@@ -10,16 +10,13 @@ import org.hyperledger.indy.sdk.wallet.Wallet
 
 class CredentialRepository() {
     fun getCredentialList(wallet: Wallet, filter: CredentialFilter?): List<Credential> {
-        val raw: String = getRawCredentials(
-            wallet,
-            if (filter == null) "{}" else Gson().toJson(filter).toString()
+        return Gson().fromJson(
+            getRawCredentials(
+                wallet,
+                if (filter == null) "{}" else Gson().toJson(filter).toString()
+            ),
+            object : TypeToken<List<Credential>>() {}.type
         )
-        val parsedList: List<Credential> =
-            Gson().fromJson(raw, object : TypeToken<List<Credential>>() {}.type)
-        for (parsed in parsedList) {
-            parsed.raw = raw
-        }
-        return parsedList
     }
 
     fun getRawCredentials(wallet: Wallet, filter: String): String {
