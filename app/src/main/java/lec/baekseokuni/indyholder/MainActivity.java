@@ -1,25 +1,21 @@
 package lec.baekseokuni.indyholder;
 
-import android.app.Application;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-
+import kr.co.bdgen.indywrapper.data.argument.CredentialInfo;
+import kr.co.bdgen.indywrapper.data.payload.IssuePayload;
 import kr.co.bdgen.indywrapper.data.payload.OfferPayload;
 import kr.co.bdgen.indywrapper.repository.CredentialRepository;
 import kr.co.bdgen.indywrapper.repository.IssuingRepository;
 
 public class MainActivity extends AppCompatActivity {
+    private final IssuingRepository repository = new IssuingRepository();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,60 +37,7 @@ public class MainActivity extends AppCompatActivity {
         String secret = data.getQueryParameter("secret");
         Log.d("[SUCCESS]", secret);
 
-        //1. offer 받기
-        IssuingRepository repository = new IssuingRepository();
-        repository.requestOffer(
-                secret,
-                offerPayload -> {
-                    Log.d("[SUCCESS]", offerPayload.getCredDefJson() + "\n" + offerPayload.getCredOfferJson());
-
-                    //2. request and issue credential
-                    repository.requestCredential(
-                            MyApplication.getWallet(),
-                            MyApplication.getDid(this),
-                            MyApplication.getMasterSecret(this),
-                            secret,
-                            offerPayload,
-                            (credentialInfo, issuePayload) -> {
-                                Log.d(
-                                        "[SUCCESS]",
-                                        credentialInfo.getCredReqMetadataJson() +
-                                                "\n" +
-                                                credentialInfo.getCredReqJson() +
-                                                "\n" +
-                                                credentialInfo.getCredDefJson() +
-                                                "\n" +
-                                                issuePayload.getCredentialJson()
-                                );
-
-                                //3. store credential
-                                repository.storeCredential(
-                                        MyApplication.getWallet(),
-                                        credentialInfo,
-                                        issuePayload,
-                                        cred -> {
-                                            Log.i("[SUCCESS]", "credential = " + cred);
-                                            return null;
-                                        },
-                                        error -> {
-                                            Log.e("[ERROR!]", error.getMessage(), error);
-                                            return null;
-                                        }
-                                );
-                                return null;
-                            },
-                            error -> {
-                                Log.e("[ERROR!]", error.getMessage(), error);
-                                return null;
-                            }
-                    );
-                    return null;
-                },
-                error -> {
-                    Log.e("[ERROR!]", error.getMessage(), error);
-                    return null;
-                }
-        );
+        getOffer(secret);
 
         /*
         terminal emulator 실행 code
@@ -106,6 +49,68 @@ public class MainActivity extends AppCompatActivity {
          */
 
 
+    }
+
+    private void getOffer(String secret) {
+        //1. offer 받기
+        repository.requestOffer(
+                secret,
+                offerPayload -> {
+                    Log.d("[SUCCESS]", offerPayload.getCredDefJson() + "\n" + offerPayload.getCredOfferJson());
+                    issueCredential(secret, offerPayload);
+                    return null;
+                },
+                error -> {
+                    Log.e("[ERROR!]", error.getMessage(), error);
+                    return null;
+                }
+        );
+    }
+
+    private void issueCredential(String secret, OfferPayload offerPayload) {
+        //2. request and issue credential
+        repository.requestCredential(
+                MyApplication.getWallet(),
+                MyApplication.getDid(this),
+                MyApplication.getMasterSecret(this),
+                secret,
+                offerPayload,
+                (credentialInfo, issuePayload) -> {
+                    Log.d(
+                            "[SUCCESS]",
+                            credentialInfo.getCredReqMetadataJson() +
+                                    "\n" +
+                                    credentialInfo.getCredReqJson() +
+                                    "\n" +
+                                    credentialInfo.getCredDefJson() +
+                                    "\n" +
+                                    issuePayload.getCredentialJson()
+                    );
+                    storeCredential(credentialInfo, issuePayload);
+                    return null;
+                },
+                error -> {
+                    Log.e("[ERROR!]", error.getMessage(), error);
+                    return null;
+                }
+        );
+    }
+
+    private void storeCredential(CredentialInfo credentialInfo, IssuePayload issuePayload) {
+        //3. store credential
+        repository.storeCredential(
+                MyApplication.getWallet(),
+                credentialInfo,
+                issuePayload,
+                cred -> {
+                    Log.i("[SUCCESS]", "credential = " + cred);
+                    return null;
+                },
+                error -> {
+                    Log.e("[ERROR!]", error.getMessage(), error);
+                    return null;
+                }
+        );
     }
 
     /**
