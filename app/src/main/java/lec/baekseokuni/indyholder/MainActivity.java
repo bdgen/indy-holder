@@ -20,14 +20,13 @@ import kr.co.bdgen.indywrapper.repository.CredentialRepository;
 import kr.co.bdgen.indywrapper.repository.IssuingRepository;
 
 public class MainActivity extends AppCompatActivity {
-    private OfferPayload offer = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView text = (TextView) findViewById(R.id.txt_main);
+        TextView text = findViewById(R.id.txt_main);
         String credJsonArray = getCredential();
         text.setText(credJsonArray);
 
@@ -44,11 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
         //1. offer 받기
         IssuingRepository repository = new IssuingRepository();
-        repository.reuqestOffer(
+        repository.requestOffer(
                 secret,
                 offerPayload -> {
                     Log.d("[SUCCESS]", offerPayload.getCredDefJson() + "\n" + offerPayload.getCredOfferJson());
-                    offer = offerPayload;
 
                     //2. request and issue credential
                     repository.requestCredential(
@@ -56,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                             MyApplication.getDid(this),
                             MyApplication.getMasterSecret(this),
                             secret,
-                            offer,
+                            offerPayload,
                             (credentialInfo, issuePayload) -> {
                                 Log.d(
                                         "[SUCCESS]",
