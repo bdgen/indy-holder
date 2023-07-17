@@ -13,7 +13,6 @@ import org.hyperledger.indy.sdk.wallet.Wallet
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.concurrent.CompletableFuture
 
 
 class IssuingRepository() {
@@ -24,7 +23,7 @@ class IssuingRepository() {
     /**
      * 1. Credential을 생성하기 위해 issuer에 offer
      */
-    fun reuqestOffer(
+    fun requestOffer(
         secret: String,
         onSuccess: (OfferPayload) -> Void,
         onFail: (Throwable) -> Void,
@@ -48,8 +47,7 @@ class IssuingRepository() {
                     t.printStackTrace()
                     onFail(t)
                 }
-            }
-            )
+            })
     }
 
     /**

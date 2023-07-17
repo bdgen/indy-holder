@@ -44,7 +44,7 @@ clone한 repository에 아래 세팅이 되어 있는지 확인합니다.
 - /app/src/main/res: UI 구성을 위한 각종 정적 resource 파일 directory
 
 ### indy client directory structure
-![indy client dir](app/etc/indy_client_dir_structure.png)
+![indy client dir](etc/created-indy-pool-wallet.png)
 
 ### 
 sdk API
