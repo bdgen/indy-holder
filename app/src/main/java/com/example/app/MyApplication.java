@@ -18,9 +18,9 @@ import kr.co.bdgen.indywrapper.repository.IssuingRepository;
 
 public class MyApplication extends Application {
     public static final String WALLET_PREFERENCE = "WALLET_PREFERENCE";
-    public static final String PREF_KEY_DID = "PREF_KEY_DID1";
-    public static final String PREF_KEY_VER_KEY = "PREF_KEY_DID2";
-    public static final String PREF_KET_MASTER_SECRET = "PREF_KEY_DID3";
+    public static final String PREF_KEY_DID = "PREF_KEY_DID";
+    public static final String PREF_KEY_VER_KEY = "PREF_KEY_DID";
+    public static final String PREF_KET_MASTER_SECRET = "PREF_KEY_DID";
 
     private static Wallet wallet;
 
@@ -57,7 +57,7 @@ public class MyApplication extends Application {
             WalletConfig.createWallet(this).get();
 
             //5 wallet 열기
-             wallet = WalletConfig.openWallet().get();
+            wallet = WalletConfig.openWallet().get();
 
             //6 did, verKey 생성
             Pair<String, String> didAndVerKey = WalletConfig.createDid(wallet).get();
