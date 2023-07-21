@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import kr.co.bdgen.indywrapper.data.payload.OfferPayload;
 import kr.co.bdgen.indywrapper.repository.CredentialRepository;
@@ -17,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TextView text = (TextView) findViewById(R.id.txt_main);
+        String credJsonArray = getCredentioal();
+        text.setText(credJsonArray);
 
         // deeplink Url = indy://holder?secret=blarblar
         // scheme = indy
